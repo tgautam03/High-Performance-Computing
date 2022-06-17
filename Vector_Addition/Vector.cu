@@ -25,7 +25,17 @@ class Vector
         if (device == false)
             Vector::ptr = new float[len];
         else
-            cudaMalloc((void**)&(Vector::ptr), (Vector::len)*sizeof(float));
+        {
+            cudaError_t err = cudaMalloc((void**)&(Vector::ptr), (Vector::len)*sizeof(float));
+
+            if (err != cudaSuccess)
+            {
+                std::cout << cudaGetErrorString(err) << " in " 
+                << __FILE__ << " at " << __LINE__ << "\n";
+            }
+            else
+                std::cout << "Memory Allocation on Device success! \n";
+        }
     }
 
     // Get value at a specific index
