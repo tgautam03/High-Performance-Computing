@@ -2,9 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-
 // Randomly initialise a vector
-void rand_init(Vector h_v) 
+void rand_init(Vector &h_v) 
 {
     assert (h_v.device == false);
     for (int i = 0; i < h_v.len; i++)
@@ -17,7 +16,7 @@ void rand_init(Vector h_v)
 }
 
 // Initialise a vector with specific value
-void val_init(Vector h_v, float val) 
+void val_init(Vector &h_v, float val) 
 {
     assert (h_v.device == false);
     for (int i = 0; i < h_v.len; i++)
@@ -35,12 +34,14 @@ void print(Vector h_v, string name)
     std::cout << "\n";
 }
 
+
 // Move data to device
 Vector toDevice(Vector h_v, bool del=false)
 {
     assert (h_v.device == false);
 
     Vector d_v(h_v.len, true);
+
     cudaMemcpy(d_v.ptr, h_v.ptr, h_v.len*sizeof(float), cudaMemcpyHostToDevice);
 
     if (del==true)
@@ -54,7 +55,8 @@ Vector toHost(Vector d_v, bool del=true)
 {
     assert (d_v.device == true);
 
-    Vector h_v(d_v.len, false);
+    Vector h_v(d_v.len);
+
     cudaMemcpy(h_v.ptr, d_v.ptr, d_v.len*sizeof(float), cudaMemcpyDeviceToHost);
 
     if (del==true)

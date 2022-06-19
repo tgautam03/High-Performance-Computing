@@ -1,6 +1,5 @@
 #include <iostream>
 #include <stdlib.h>
-#include <assert.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
 
@@ -17,44 +16,37 @@ class Vector
     bool device = false;
 
     // Constructor to setup vector pointer
-    Vector(int len, bool device=false) 
-    {
-        Vector::len = len;
-        Vector::device = device;
-
-        if (device == false)
-            Vector::ptr = new float[len];
-        else
-        {
-            cudaError_t err = cudaMalloc((void**)&(Vector::ptr), (Vector::len)*sizeof(float));
-
-            if (err != cudaSuccess)
-            {
-                std::cout << cudaGetErrorString(err) << " in " 
-                << __FILE__ << " at " << __LINE__ << "\n";
-            }
-            else
-                std::cout << "Memory Allocation on Device success! \n";
-        }
-    }
-
-    // Get value at a specific index
-    float operator[](int idx);
-
-    // Assign value at a specific index
-    void put(float val, int idx);
+    Vector(int, bool); 
 
     // Free up the memory
     void free();
 };
 
-float Vector::operator[](int idx) {
-    return Vector::ptr[idx];
+
+// Constructor to setup vector pointer
+Vector::Vector(int len_, bool device_=false) 
+{
+    Vector::len = len_;
+    Vector::device = device_;
+
+    if (device_ == false)
+        Vector::ptr = new float[len_];
+    else
+    {
+        cudaError_t err = cudaMalloc((void**)&(Vector::ptr), (Vector::len)*sizeof(float));
+
+        if (err != cudaSuccess)
+        {
+            std::cout << cudaGetErrorString(err) << " in " 
+            << __FILE__ << " at " << __LINE__ << "\n";
+
+            exit(EXIT_FAILURE);
+        }
+        else
+            std::cout << "Memory Allocation on Device success! \n";
+    }
 }
 
-void Vector::put(float val, int idx) {
-    Vector::ptr[idx] = val;
-}
 
 void Vector::free() {
     if (Vector::device == false)
