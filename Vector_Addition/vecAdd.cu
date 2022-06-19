@@ -1,3 +1,6 @@
+// Forward declaration
+__global__ void addKernel(float *a, float *b, float *c, int N);
+
 void add(Vector v1, Vector v2, Vector v3) 
 {
     assert (v1.device == false && v2.device == false && v3.device == false);
