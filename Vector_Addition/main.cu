@@ -14,6 +14,7 @@ int main() {
     std::cout <<"Enter the length of vector: ";
     std::cin >> len;
 
+    // Defining Vectors
     Vector v1(len), v2(len), v3(len);
 
     // Initialising vectors
